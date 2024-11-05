@@ -50,15 +50,16 @@
 </head>
 <body>
     <div class="container">
-        <h1>Point Position Simulator</h1>
+        <h1>Padel Point Position Simulator</h1>
         <label for="points">Enter your current points:</label><br>
         <input type="number" id="points" required><br>
-        <input type="button" value="Simulate Position" onclick="simulatePosition()">
+        <input type="button" value="Simulate Position" onclick="simulatePosition()" disabled>
         <div id="result"></div>
     </div>
 
     <script>
         let data = [];
+        let maxPoint = 0;
 
         // Function to load the Excel file
         function loadExcelData() {
@@ -70,6 +71,10 @@
                     const firstSheetName = workbook.SheetNames[0];
                     const worksheet = workbook.Sheets[firstSheetName];
                     data = XLSX.utils.sheet_to_json(worksheet);
+
+                    // Find the maximum point in the dataset
+                    maxPoint = Math.max(...data.map(item => item.Points));
+
                     // After loading data, enable the button
                     document.querySelector('input[type="button"]').disabled = false;
                 })
@@ -94,12 +99,27 @@
                 return;
             }
 
+            if (currentPoints > maxPoint) {
+                document.getElementById('result').innerHTML = `
+                    <p>Your point total exceeds the maximum point in our dataset.</p>
+                    <p>You are already beyond the highest position available!</p>
+                `;
+                return;
+            }
+
             let adjustedPoints = currentPoints;
             const pointSet = new Set(data.map(item => item.Points));
 
-            // Increment points until a match is found
+            // Increment points until a match is found or adjustedPoints exceeds maxPoint
             while (!pointSet.has(adjustedPoints)) {
                 adjustedPoints++;
+                if (adjustedPoints > maxPoint) {
+                    document.getElementById('result').innerHTML = `
+                        <p>No matching position found within the dataset.</p>
+                        <p>Please contact support for more information.</p>
+                    `;
+                    return;
+                }
             }
 
             const matchedItem = data.find(item => item.Points === adjustedPoints);
