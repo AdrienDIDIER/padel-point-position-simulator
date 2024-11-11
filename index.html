@@ -11,57 +11,59 @@
             justify-content: center;
             padding-top: 50px;
             font-family: 'Roboto', sans-serif;
-            background-color: #f0f2f5;
-            color: #333;
+            background-color: #1e1e1e;
+            color: #e0e0e0;
         }
         .container {
             text-align: center;
-            background-color: #c7c6c3;
+            background-color: #2b2b2b;
             padding: 40px 60px;
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
             max-width: 500px;
             width: 90%;
         }
         h1 {
-            color: #3a7bd5;
+            color: #4dabf7;
             margin-bottom: 24px;
             font-size: 1.8em;
         }
         label {
             font-size: 1.1em;
-            color: #666;
+            color: #c0c0c0;
         }
         input[type="number"] {
             padding: 12px;
             margin: 15px 0;
             width: 100%;
             font-size: 1em;
-            border: 1px solid #ccc;
+            border: 1px solid #444;
+            background-color: #3a3a3a;
+            color: #e0e0e0;
             border-radius: 8px;
             outline: none;
             transition: border-color 0.3s;
         }
         input[type="number"]:focus {
-            border-color: #3a7bd5;
+            border-color: #4dabf7;
         }
         input[type="button"] {
             padding: 12px 24px;
             font-size: 1em;
-            color: #fff;
-            background-color: #3a7bd5;
+            color: #ffffff;
+            background-color: #4dabf7;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             transition: background-color 0.3s;
         }
         input[type="button"]:hover {
-            background-color: #357ab7;
+            background-color: #42a0e3;
         }
         #result {
             margin-top: 30px;
             font-size: 1.2em;
-            color: #333;
+            color: #f0f0f0;
         }
         #language-switch {
             position: absolute;
@@ -69,10 +71,16 @@
             right: 10px;
             cursor: pointer;
             font-size: 0.9em;
-            background-color: #3a7bd5;
-            color: #fff;
+            color: #ffffff;
             padding: 8px 12px;
             border-radius: 6px;
+            background-color: #4dabf7; /* Ensures visibility in dark mode */
+            border: 1px solid #357ab7;  /* Border for added visibility */
+            background-size: cover;
+            background-repeat: no-repeat;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
         }
     </style>
 </head>
