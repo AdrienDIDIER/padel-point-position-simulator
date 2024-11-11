@@ -1,49 +1,71 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Point Position Simulator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Padel Point Position Simulator</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         body {
             display: flex;
             justify-content: center;
             padding-top: 50px;
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
         }
         .container {
             text-align: center;
-            background-color: #fff;
-            padding: 30px 50px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            background-color: #ffffff;
+            padding: 40px 60px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 90%;
+        }
+        h1 {
+            color: #3a7bd5;
+            margin-bottom: 24px;
+            font-size: 1.8em;
+        }
+        label {
+            font-size: 1.1em;
+            color: #666;
         }
         input[type="number"] {
-            padding: 10px;
+            padding: 12px;
             margin: 15px 0;
-            width: 80%;
+            width: 100%;
             font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        input[type="number"]:focus {
+            border-color: #3a7bd5;
         }
         input[type="button"] {
-            padding: 10px 20px;
+            padding: 12px 24px;
             font-size: 1em;
+            color: #fff;
+            background-color: #3a7bd5;
+            border: none;
+            border-radius: 8px;
             cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        input[type="button"]:hover {
+            background-color: #357ab7;
         }
         #result {
             margin-top: 30px;
             font-size: 1.2em;
-        }
-        h1 {
-            margin-bottom: 20px;
+            color: #333;
         }
         @media (max-width: 600px) {
             .container {
-                width: 90%;
-                padding: 20px;
-            }
-            input[type="number"] {
-                width: 100%;
+                padding: 20px 30px;
             }
         }
     </style>
@@ -61,41 +83,36 @@
         let data = [];
         let maxPoint = 0;
 
-        // Function to load the Excel file
         function loadExcelData() {
-            const url = 'data.xlsx'; // Path to your Excel file
+            const url = 'data.xlsx';
             fetch(url)
                 .then(response => response.arrayBuffer())
                 .then(dataBuffer => {
-                    const workbook = XLSX.read(dataBuffer, {type: 'array'});
+                    const workbook = XLSX.read(dataBuffer, { type: 'array' });
                     const firstSheetName = workbook.SheetNames[0];
                     const worksheet = workbook.Sheets[firstSheetName];
                     data = XLSX.utils.sheet_to_json(worksheet);
 
-                    // Find the maximum point in the dataset
                     maxPoint = Math.max(...data.map(item => item.Points));
-
-                    // After loading data, enable the button
                     document.querySelector('input[type="button"]').disabled = false;
                 })
                 .catch(error => {
                     console.error('Error loading Excel file:', error);
-                    document.getElementById('result').innerHTML = '<p>Error loading data.</p>';
+                    document.getElementById('result').innerHTML = '<p style="color: red;">Error loading data.</p>';
                 });
         }
 
-        // Call the function to load the data when the page loads
         window.onload = loadExcelData;
 
         function simulatePosition() {
             if (data.length === 0) {
-                document.getElementById('result').innerHTML = '<p>Data is still loading. Please wait.</p>';
+                document.getElementById('result').innerHTML = '<p style="color: orange;">Data is still loading. Please wait.</p>';
                 return;
             }
 
             const currentPoints = parseInt(document.getElementById('points').value);
             if (isNaN(currentPoints)) {
-                document.getElementById('result').innerHTML = '<p>Please enter a valid number.</p>';
+                document.getElementById('result').innerHTML = '<p style="color: red;">Please enter a valid number.</p>';
                 return;
             }
 
@@ -110,7 +127,6 @@
             let adjustedPoints = currentPoints;
             const pointSet = new Set(data.map(item => item.Points));
 
-            // Increment points until a match is found or adjustedPoints exceeds maxPoint
             while (!pointSet.has(adjustedPoints)) {
                 adjustedPoints++;
                 if (adjustedPoints > maxPoint) {
@@ -127,8 +143,8 @@
             const additionalPointsNeeded = adjustedPoints - currentPoints;
 
             document.getElementById('result').innerHTML = `
-                <p>Your future position is: <strong>${position}</strong></p>
-                <p>You need <strong>${additionalPointsNeeded}</strong> more point(s) to reach this position.</p>
+                <p>Your future position is: <strong style="color: #3a7bd5;">${position}</strong></p>
+                <p>You need <strong style="color: #3a7bd5;">${additionalPointsNeeded}</strong> more point(s) to reach this position.</p>
             `;
         }
     </script>
