@@ -124,6 +124,7 @@
             }
         };
 
+        // Function to load the Excel data (unchanged)
         function loadExcelData() {
             const url = 'data.xlsx';
             fetch(url)
@@ -142,9 +143,20 @@
                     document.getElementById('result').innerHTML = `<p style="color: red;">${translations[language].loadingError}</p>`;
                 });
         }
+   
+        // New function to display the simulation result with current language translation
+        function displaySimulationResult(position, additionalPointsNeeded) {
+            const futurePositionText = translations[language].futurePosition;
+            const pointsNeededText = translations[language].pointsNeeded;
+            const morePointsText = translations[language].morePoints;
 
-        window.onload = loadExcelData;
+            document.getElementById('result').innerHTML = `
+                <p>${futurePositionText}<strong style="color: #3a7bd5;">${position}</strong></p>
+                <p>${pointsNeededText}<strong style="color: #3a7bd5;">${additionalPointsNeeded}</strong>${morePointsText}</p>
+            `;
+        }
 
+        // Updated simulatePosition function to use displaySimulationResult
         function simulatePosition() {
             if (data.length === 0) {
                 document.getElementById('result').innerHTML = `<p style="color: orange;">${translations[language].loading}</p>`;
@@ -183,10 +195,7 @@
             const position = matchedItem.Position;
             const additionalPointsNeeded = adjustedPoints - currentPoints;
 
-            document.getElementById('result').innerHTML = `
-                <p>${translations[language].futurePosition}<strong style="color: #3a7bd5;">${position}</strong></p>
-                <p>${translations[language].pointsNeeded}<strong style="color: #3a7bd5;">${additionalPointsNeeded}</strong>${translations[language].morePoints}</p>
-            `;
+            displaySimulationResult(position, additionalPointsNeeded);
         }
 
         function toggleLanguage() {
@@ -195,7 +204,35 @@
             document.getElementById('title').innerText = translations[language].title;
             document.getElementById('label-points').innerText = translations[language].labelPoints;
             document.getElementById('simulate-button').value = translations[language].simulateButton;
+
+            // If result is already displayed, update it to the current language
+            const resultText = document.getElementById('result').innerText;
+            if (resultText) {
+                const matchedItem = data.find(item => item.Points === parseInt(document.getElementById('points').value) || 0);
+                if (matchedItem) {
+                    const position = matchedItem.Position;
+                    const additionalPointsNeeded = parseInt(document.getElementById('points').value) - matchedItem.Points;
+                    displaySimulationResult(position, additionalPointsNeeded);
+                }
+            }
+
         }
+        
+        // Updated window.onload to also add Enter key listener
+        window.onload = function() {
+            loadExcelData();
+
+            // Set the default flag background
+            document.getElementById('language-switch').classList.add('flag-fr');
+
+            // Add Enter key event listener to the input field
+            document.getElementById('points').addEventListener("keyup", function(event) {
+                if (event.key === "Enter") {
+                    document.getElementById('simulate-button').click();
+                }
+            });
+        };
+
     </script>
 </body>
 </html>
