@@ -5,6 +5,9 @@ function App() {
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
 
+  // Access the backend URL from environment variables
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
   const handleSimulate = async () => {
     setError(null);
     setResult(null);
@@ -14,7 +17,7 @@ function App() {
     }
 
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/position?points=${points}`);
+      const response = await fetch(`${backendUrl}/api/position?points=${points}`);
       if (!response.ok) {
         const data = await response.json();
         throw new Error(data.detail || "Error from server");
