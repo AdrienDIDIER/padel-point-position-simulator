@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c \"import openpyxl; wb = openpyxl.load_workbook\\('data.xlsx'\\); ws = wb.active; print\\(f'Columns: {[cell.value for cell in ws[1]]}'\\); print\\(f'Row count: {ws.max_row}'\\); print\\('Sample rows:'\\); [print\\(f'{ws.cell\\(i, 1\\).value}, {ws.cell\\(i, 2\\).value}'\\) for i in range\\(2, min\\(11, ws.max_row + 1\\)\\)]\")",
+      "Bash(python3 -c \"import pandas; df = pandas.read_excel\\('data.xlsx'\\); print\\(f'Shape: {df.shape}'\\); print\\(df.head\\(10\\)\\); print\\('\\\\n...'\\); print\\(df.tail\\(5\\)\\)\")",
+      "WebFetch(domain:padelmagazine.fr)",
+      "Bash(python scripts/convert_xlsx.py)"
+    ]
+  }
+}

@@ -1,0 +1,47 @@
+name: Update Padel Rankings
+
+on:
+  schedule:
+    # First Thursday of each month at 08:00 UTC
+    # = first Tuesday of month + 2 days (padelmagazine.fr update schedule)
+    - cron: "0 8 1-7 * 4"
+  workflow_dispatch: # Allow manual trigger from GitHub UI
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java (required by tabula-py)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "11"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Scrape and update rankings
+        run: python scripts/scrape_rankings.py
+
+      - name: Commit updated data files
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add data.json players_men.json players_women.json 2>/dev/null || true
+          git diff --staged --quiet && echo "No changes to commit." || \
+            git commit -m "chore: auto-update rankings $(date -u +%Y-%m-%d)"
+
+      - name: Push changes
+        run: git push
